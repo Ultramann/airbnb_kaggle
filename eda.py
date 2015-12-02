@@ -1,9 +1,4 @@
-import pandas as pd
-from data_prep import transform
-
-
-def load_data():
-    return pd.read_csv('data/train_users.csv', parse_dates=[1, 2])
+from data_prep import load_data, transform
 
 
 if __name__ == '__main__':

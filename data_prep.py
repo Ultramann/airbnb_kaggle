@@ -1,7 +1,11 @@
 import pandas as pd
 
 
-def transform(df):
+def load_data():
+    return pd.read_csv('data/train_users.csv', parse_dates=[1, 2])
+
+
+def transform_data(df):
     df.age.fillna(-1, inplace=True)
     df = dummy_gender(df)
     return df
