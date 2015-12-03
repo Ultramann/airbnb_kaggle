@@ -6,7 +6,7 @@ def ndcg_score(y_preds, y_true, k=5):
     relevance = (y_preds[:, :k] == y_true[:, None]).astype(int)
     dcg_denominator = np.log2(np.arange(relevance.shape[1]) + 2)
     ndcg = relevance / dcg_denominator[None, :]
-    return np.sum(ndcg)
+    return np.sum(ndcg, axis=1)
 
 
 def ndcg_cross_val_score(estimator, X, y, n_folds=5):
