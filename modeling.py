@@ -1,5 +1,5 @@
-import numpy as np
 from data_prep import load_data, transform_data
+from cross_validation import ndcg_cross_val_score
 from sklearn.ensemble import RandomForestClassifier
 
 
@@ -9,20 +9,14 @@ def prep_for_modeling(df, columns_to_drop=['id', 'date_account_created', 'timest
     return X, y
 
 
-def ndcg_score(y_pred, y_true, k=5):
-    relevance = (y_pred[:k] == y_true).astype(int)
-    dcg_numerator = 2 ** relevance - 1
-    dcg_denominator = np.log2(np.arange(relevance.shape[0]) + 2)
-    return np.sum(dcg_numerator / dcg_denominator)
-
-
 def modeling_exclaimation_point(df):
     X, y = prep_for_modeling(df)
     rfc = RandomForestClassifier(n_estimators=20)
-    return score
+    scores = ndcg_cross_val_score(rfc, X, y)
+    return scores
 
 
 if __name__ == '__main__':
     df = load_data()
     df = transform_data(df)
-    score = modeling_exclaimation_point(df)
+    scores = modeling_exclaimation_point(df)
