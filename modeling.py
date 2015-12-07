@@ -16,7 +16,7 @@ def modeling_exclaimation_point(df):
                       'affiliate_provider', 'first_affiliate_tracked', 'signup_app', 
                       'first_device_type', 'first_browser', 'country_destination']
     X, y = prep_for_modeling(df, columns_to_drop=columns_to_drop)
-    rfc = RandomForestClassifier(n_estimators=20)
+    rfc = RandomForestClassifier(n_estimators=100, n_jobs=-1)
     scores = ndcg_cross_val_score(rfc, X, y)
     return scores
 
