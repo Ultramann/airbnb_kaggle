@@ -6,9 +6,14 @@ def load_data():
 
 
 def transform_data(df):
-    df.age.fillna(-1, inplace=True)
+    make_nan_bools(df)
     df = dummy_gender(df)
     return df
+
+
+def make_nan_bools(df):
+    df.age.fillna(-1, inplace=True)
+    df['already_booked'] = df.date_first_booking.isnull()
 
 
 def dummy_gender(df):
