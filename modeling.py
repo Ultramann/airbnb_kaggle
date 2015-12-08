@@ -1,24 +1,36 @@
+import pickle
 from data_prep import load_data, transform_data
 from cross_validation import ndcg_cross_val_score
 from sklearn.ensemble import RandomForestClassifier
 
 
-def prep_for_modeling(df, columns_to_drop):
+columns_to_drop = ['id', 'date_account_created', 'timestamp_first_active', 'date_first_booking', 
+                   'signup_method', 'signup_flow', 'language', 'affiliate_channel', 
+                   'affiliate_provider', 'first_affiliate_tracked', 'signup_app', 
+                   'first_device_type', 'first_browser', 'country_destination']
+model_path = 'models/{}.pkl'
+
+
+def prep_for_modeling(df, column, columns_to_drop):
     X = df.drop(labels=columns_to_drop, axis=1).values
-    y = df.country_destination.values
-    return X, y
+    single_column = df[column].values
+    return X, single_column
 
 
 def modeling_exclaimation_point(df):
     df = transform_data(df)
-    columns_to_drop =['id', 'date_account_created', 'timestamp_first_active', 'date_first_booking', 
-                      'signup_method', 'signup_flow', 'language', 'affiliate_channel', 
-                      'affiliate_provider', 'first_affiliate_tracked', 'signup_app', 
-                      'first_device_type', 'first_browser', 'country_destination']
     X, y = prep_for_modeling(df, columns_to_drop=columns_to_drop)
     rfc = RandomForestClassifier(n_estimators=100, n_jobs=-1)
     scores = ndcg_cross_val_score(rfc, X, y)
     return scores
+
+
+def make_model(df, model, model_name):
+    df = transform_data(df)
+    X, y = prep_for_modeling(df, column='country_destination', columns_to_drop=columns_to_drop)
+    model.fit(X, y)
+    with open(model_path.format(model_name), 'w+') as model_file:
+        pickle.dump(model, model_file)
 
 
 if __name__ == '__main__':

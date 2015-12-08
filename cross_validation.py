@@ -9,13 +9,13 @@ def ndcg_score(y_preds, y_true, k=5):
     return np.sum(ndcg, axis=1)
 
 
-def ndcg_cross_val_score(estimator, X, y, n_folds=5):
+def ndcg_cross_val_score(model, X, y, n_folds=5):
     kf = KFold(y.shape[0], n_folds=n_folds)
     target_classes = np.sort(np.unique(y))
 
     def make_score_fold(train_idx, test_idx):
-        estimator.fit(X[train_idx], y[train_idx])
-        test_probs = estimator.predict_proba(X[test_idx])
+        model.fit(X[train_idx], y[train_idx])
+        test_probs = model.predict_proba(X[test_idx])
         test_predictions = target_classes[np.argsort(test_probs)[:, ::-1]]
         return ndcg_score(test_predictions, y[test_idx]).mean()
 

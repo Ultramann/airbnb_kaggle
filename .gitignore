@@ -1,2 +1,4 @@
+csv_submissions/
 data/
+models/
 *.pyc
