@@ -12,12 +12,22 @@ model_path = 'models/{}.pkl'
 
 
 def prep_for_modeling(df, column, columns_to_drop):
+    '''
+    Input:  DataFrame, Str - name of column to return separately, List
+    Output: NpArray - data from df without columns_to_drop, NpArray - single specified column
+    '''
     X = df.drop(labels=columns_to_drop, axis=1).values
     single_column = df[column].values
     return X, single_column
 
 
 def modeling_exclaimation_point(df):
+    '''
+    Input:  DataFrame
+    Output: NpArray - scores from k-fold tests on current data transformation
+
+    Function to quickly test engineered features.
+    '''
     df = transform_data(df)
     X, y = prep_for_modeling(df, columns_to_drop=columns_to_drop)
     rfc = RandomForestClassifier(n_estimators=100, n_jobs=-1)
@@ -26,6 +36,10 @@ def modeling_exclaimation_point(df):
 
 
 def make_model(df, model, model_name):
+    '''
+    Input:  DataFrame, Model Instance - implementing fit method, Str - of name for pickled model file
+    Output: None
+    '''
     df = transform_data(df)
     X, y = prep_for_modeling(df, column='country_destination', columns_to_drop=columns_to_drop)
     model.fit(X, y)
