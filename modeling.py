@@ -29,7 +29,7 @@ def modeling_exclaimation_point(df):
     Function to quickly test engineered features.
     '''
     df = transform_data(df)
-    X, y = prep_for_modeling(df, columns_to_drop=columns_to_drop)
+    X, y = prep_for_modeling(df, column='country_destination', columns_to_drop=columns_to_drop)
     rfc = RandomForestClassifier(n_estimators=100, n_jobs=-1)
     scores = ndcg_cross_val_score(rfc, X, y)
     return scores
